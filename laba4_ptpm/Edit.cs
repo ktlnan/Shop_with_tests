@@ -66,8 +66,8 @@ namespace laba4_ptpm
 
         private void button2_Click(object sender, EventArgs e) // редактировать
         {
-            var productInContext = _context.Product.Find(_product.Id);
-            var pr = _context.Product.Find(_product.Id);
+           
+           
             if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text) ||
                 string.IsNullOrWhiteSpace(txtQuantity.Text) || pictureBox1.Image == null)
             {
@@ -90,27 +90,35 @@ namespace laba4_ptpm
                 MessageBox.Show("Поле кол-ва товаров должно содержать только цифры");
                 return;
             }
-            if (pictureBox1.Image == null)
+           var product = new Product();
+            if (pictureBox1.Image != null)
             {
-                productInContext.Image = ImageToByteArray(pictureBox1.Image);
+                
+                product = Update(_product.Id, txtName.Text, Convert.ToInt32(txtPrice.Text), Convert.ToInt32(txtQuantity.Text), ImageToByteArray(pictureBox1.Image));
+                if (product is null)
+                {
+                    MessageBox.Show("error");
+                    return;
+                }
+                MessageBox.Show("Изменения сохранены успешно!");
+
+             
             }
             else
             {
-
-            }
-            if (productInContext != null)
+             product = Update(_product.Id, txtName.Text,Convert.ToInt32(txtPrice.Text), Convert.ToInt32(txtQuantity.Text), null);
+            if (product is null)
             {
-                productInContext.Name = txtName.Text;
-                productInContext.Price = int.Parse(txtPrice.Text);
-                productInContext.Quantity = int.Parse(txtQuantity.Text);
-
-                _context.SaveChanges();
-                MessageBox.Show("Изменения сохранены успешно!");
-
-                FormT formB = new FormT(new laba4Entities(), productInContext);
-                Hide();
-                formB.Show();
+                MessageBox.Show("error");
+                return;
             }
+            MessageBox.Show("Изменения сохранены успешно!");
+
+            }
+
+            FormT formB = new FormT(new laba4Entities(), product);
+            Hide();
+            formB.Show();
         }
         public byte[] ImageToByteArray(Image image)
         {
@@ -125,6 +133,23 @@ namespace laba4_ptpm
             Form3 f = new Form3(new laba4Entities());
             Hide();
             f.ShowDialog();
+        }
+        public Product Update(int id, string name, int price, int quantity, byte[] image)
+        {
+            try
+            {
+                var product = _context.Product.Find(id);
+                product.Name = txtName.Text;
+                product.Price = int.Parse(txtPrice.Text);
+                product.Quantity = int.Parse(txtQuantity.Text);
+                if (image != null)
+                {
+                    product.Image = image;
+                }
+                _context.SaveChanges();
+                return product;
+            }
+            catch { return null; }
         }
     }
 }

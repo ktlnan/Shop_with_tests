@@ -22,8 +22,9 @@ namespace laba4_ptpm
         public string Role { get; set; }
         public User()
         { }
-        public User(string Login, string Password, string name, int phone, string role)
+        public User(int id, string Login, string Password, string name, int phone, string role)
         {
+            this.id = id;
             this.Login = Login;
             this.Password = Password;
             this.name = name;

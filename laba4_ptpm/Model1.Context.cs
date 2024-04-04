@@ -18,11 +18,14 @@ namespace laba4_ptpm
         public laba4Entities()
             : base("name=laba4Entities")
         {
+            Database.SetInitializer<laba4Entities>(new CreateDatabaseIfNotExists<laba4Entities>());
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            
             throw new UnintentionalCodeFirstException();
+
         }
     
         public virtual DbSet<Product> Product { get; set; }

@@ -22,7 +22,7 @@ namespace laba4_ptpm
         private void button2_Click(object sender, EventArgs e) //список
         {
            
-            FormU t = new FormU(new laba4Entities());
+            FormU t = new FormU(new laba4Entities(), true);
             Hide();
             t.ShowDialog();
         }

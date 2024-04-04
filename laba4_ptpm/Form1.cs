@@ -43,7 +43,7 @@ namespace laba4_ptpm
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2();
+            Form2 f2 = new Form2(context);
             Hide();
             f2.Show();
         }
@@ -58,9 +58,10 @@ namespace laba4_ptpm
                 User user = context.User.FirstOrDefault(u => u.Login == login && u.Password == password);
                 if (user != null && user.Role == "user")
                 {
-                    FormU u = new FormU(new laba4Entities());
+                    FormU u = new FormU(new laba4Entities(), false);
                     Hide();
                     u.ShowDialog();
+                    return;
                 }
                 Form3 a = new Form3(new laba4Entities());
                 Hide();

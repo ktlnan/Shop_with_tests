@@ -30,47 +30,26 @@ namespace laba4_ptpm
                 pictureBox1.Image = new Bitmap(openFileDialog.FileName);
             }
         }
-        public bool AddProd()
+        public Product AddProd(string name, int price, int quantity, byte[] image)
         {
-            using (laba4Entities db = new laba4Entities())
+            try
             {
-                string txtName = "tulip";
-                int txtPrice = 12;
-                int txtQuantity = 122;
-                pictureBox1.Image = new Bitmap("D:\\cleo.png");
-                Product prod = new Product
+                Product newProduct = new Product
                 {
-                    Name = txtName,
-                    Price = txtPrice,
-                    Quantity = txtQuantity,
-                    Image = ImageToByteArray(pictureBox1.Image)
+                    Name = name,
+                    Price = price,
+                    Quantity = quantity,
+                    Image = image
                 };
-                db.Product.Add(prod);
-                db.SaveChanges();
-                return true;
+
+                _context.Product.Add(newProduct);
+                _context.SaveChanges();
+                return newProduct;
             }
+            catch { return null; }
         }
 
-        public Product AddProd1()
-        {
-            using (laba4Entities db = new laba4Entities())
-            {
-                string txtName = "tulip";
-                int txtPrice = 12;
-                int txtQuantity = 122;
-                pictureBox1.Image = new Bitmap("D:\\cleo.png");
-                Product prod = new Product
-                {
-                    Name = txtName,
-                    Price = txtPrice,
-                    Quantity = txtQuantity,
-                    Image = ImageToByteArray(pictureBox1.Image)
-                };
-                db.Product.Add(prod);
-                db.SaveChanges();
-                return prod;
-            }
-        }
+       
 
         private void button2_Click(object sender, EventArgs e) // добавиь
         {
@@ -105,17 +84,14 @@ namespace laba4_ptpm
                 MessageBox.Show("Товар с такими же данными уже существует");
                 return;
             }
-            Product newProduct = new Product
+       
+           var newProduct = AddProd(name, price, quantity, ImageToByteArray(pictureBox1.Image));
+            if(newProduct is null)
             {
-                Name = txtName.Text,
-                Price = int.Parse(txtPrice.Text),
-                Quantity = int.Parse(txtQuantity.Text),
-                Image = ImageToByteArray(pictureBox1.Image)
-            };
-
-            _context.Product.Add(newProduct);
-            _context.SaveChanges();
+                MessageBox.Show("error");
+            }
             MessageBox.Show("Product saved successfully!");
+
 
             FormT formB = new FormT(new laba4Entities(), newProduct);
             Hide();

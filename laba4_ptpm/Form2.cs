@@ -12,26 +12,30 @@ namespace laba4_ptpm
 {
     public partial class Form2 : Form
     {
-        public Form2()
+        private laba4Entities context;
+        public Form2(laba4Entities context)
         {
             InitializeComponent();
+            this.context = context;
         }
 
         public bool RegisterUser(string login, string password, string name, string phone, string role)
         {
-            using (laba4Entities db = new laba4Entities())
+            if (context.User.Any(u => u.Login == login))
             {
-                if (db.User.Any(u => u.Login == login && u.Password == password))
-                {
-                    return false;
+                return false;
+            }
+            else
+            {
+                var id = 0;
+                try{
+                    id = context.User.Max(u => u.id) + 1;
                 }
-                else
-                {
-                    User us = new User(login, password, name, int.Parse(phone), role);
-                    db.User.Add(us);
-                    db.SaveChanges();
-                    return true;
-                }
+                catch { };
+                User us = new User(id, login, password, name, int.Parse(phone), role);
+                context.User.Add(us);
+                context.SaveChanges();
+                return true;
             }
         }
 
@@ -76,7 +80,7 @@ namespace laba4_ptpm
                 {
                     if (role == "user")
                     {
-                        FormU u = new FormU(new laba4Entities());
+                        FormU u = new FormU(new laba4Entities(), false);
                         Hide();
                         u.ShowDialog();
                     }

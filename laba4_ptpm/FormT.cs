@@ -63,19 +63,36 @@ namespace laba4_ptpm
             DialogResult result = MessageBox.Show("Are you sure you want to delete this product?", "Delete Product", MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
-                var existingProduct = _context.Product.Find(_product.Id); // Поиск объекта по его Id
+                if (Delete(_product.Id))
+                {
+
+                    MessageBox.Show("Product deleted successfully");
+                }
+                    else
+                {
+
+                    MessageBox.Show("Product not found in the database");
+                }
+            }
+        }
+        public bool Delete(int id)
+        {
+            try
+            {
+                var existingProduct = _context.Product.Find(id); // Поиск объекта по его Id
                 if (existingProduct != null)
                 {
                     _context.Product.Remove(existingProduct);
                     _context.SaveChanges();
-                    MessageBox.Show("Product deleted successfully");
                     this.Close();
+                    return true;
                 }
                 else
                 {
-                    MessageBox.Show("Product not found in the database");
+                    return false;
                 }
             }
+            catch { return false; };
         }
     }
 }
